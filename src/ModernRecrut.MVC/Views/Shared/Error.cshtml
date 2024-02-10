@@ -1,0 +1,33 @@
+﻿@model ErrorViewModel
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment hostingEnv
+@{
+    ViewData["Title"] = "Error";
+}
+<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div style="text-align:center">
+    <img src="/fond.jpg" /><br />
+    <h2>OK, LÀ, ON L'A PAS VRAIMENT GÉRÉE CELLE-LÀ</h2>
+    <hr />
+    <h4>On est super méga désolés, on n'a pas fait exprès d'oublier de coder la page que vous recherchiez, pile maintenant, parce que sincèrement, d'habitude, nous, le Web... On gère !!!</h4>
+    
+    @if (Model.ShowRequestId)
+    {
+        <p>
+            <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        </p>
+    }
+    @if (!hostingEnv.IsDevelopment())
+    {
+        <h3>Development Mode</h3>
+        <p>
+            Le passage à l'environnement de <strong>Développement</strong> affichera des informations plus détaillées sur l'erreur survenue.
+        </p>
+        <p>
+            <strong>L'environnement de développement ne doit pas être activé pour les applications déployées.</strong>
+            Cela peut entraîner l’affichage d’informations sensibles provenant d’exceptions aux utilisateurs finaux.
+            Pour le débogage local, activez l'environnement <strong>Développement</strong> en définissant la variable d'environnement <strong>ASPNETCORE_ENVIRONMENT</strong> sur <strong>Développement</strong>.
+            et redémarrer l'application.
+        </p>
+    }
+    
+</div>

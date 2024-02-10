@@ -1,0 +1,55 @@
+﻿@model IEnumerable<ModernRecrut.MVC.Models.DTO.ListePostulationVueModel>
+
+@{
+    ViewData["Title"] = "ListePostulations";
+}
+
+<h1>Liste Postulations</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NomCandidat)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NomDuPoste)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PretentionSalariale)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateDisponibilite)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomCandidat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomDuPoste)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PretentionSalariale)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateDisponibilite)
+                </td>
+                <td>
+                    @Html.ActionLink("Modifier", "Edit", new { id = item.IdPostulation } ) |
+                    @* @Html.ActionLink("Détails", "Details", new { id = item.IdPostulation } )  | *@
+                    @Html.ActionLink("Supprimer", "Delete", new { id = item.IdPostulation } )  |
+                    @if (User.IsInRole("RH") || User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Notes", "Notes", new { id = item.IdPostulation } )
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

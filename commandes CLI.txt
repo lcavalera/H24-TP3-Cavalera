@@ -1,0 +1,1 @@
+az deployment group create --resource-group rg-sqldata --template-file main.bicep --parameters location=CanadaCentral serverName=modernrecruit dbUser=lcavalera dbPassword=LucaDemo1975$ storageName=stdocuments

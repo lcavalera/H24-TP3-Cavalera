@@ -1,0 +1,46 @@
+﻿@model ModernRecrut.MVC.Models.Postulation
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Modification</h1>
+
+<h4>Postulation</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" class="form-control" hidden />
+            <input asp-for="IdCandidat" class="form-control" hidden />
+            <input asp-for="Notes" class="form-control" hidden />
+            <div class="form-group">
+                <label asp-for="OffreEmploiID" class="control-label"></label>
+                <input asp-for="OffreEmploiID" class="form-control" />
+                <span asp-validation-for="OffreEmploiID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PretentionSalariale" class="control-label"></label>
+                <input asp-for="PretentionSalariale" class="form-control" />
+                <span asp-validation-for="PretentionSalariale" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateDisponibilite" class="control-label"></label>
+                <input asp-for="DateDisponibilite" class="form-control" />
+                <span asp-validation-for="DateDisponibilite" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Sauvegarder" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="ListePostulations">Retour</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

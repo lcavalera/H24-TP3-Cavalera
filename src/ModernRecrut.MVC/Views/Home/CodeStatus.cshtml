@@ -1,0 +1,34 @@
+﻿@model ModernRecrut.MVC.Models.CodeStatusViewModel
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment hostingEnv
+@{
+    ViewData["Title"] = "Code Status";
+}
+<h1 style="text-align:center" class ="text-danger">@Model.MessageCode (@Model.CodeStatus)</h1>
+
+<div style ="text-align:center">
+    <img src="/fond.jpg" /><br />
+    <h2>OK, LÀ, ON L'A PAS VRAIMENT GÉRÉE CELLE-LÀ</h2>
+    <hr />
+    <h4>On est super méga désolés, on n'a pas fait exprès d'oublier de coder la page que vous recherchiez, pile maintenant, parce que sincèrement, d'habitude, nous, le Web... On gère !!!</h4>
+    <h2 class="text-danger"> @Model.MessageErreur</h2>
+    @if (Model.MontrerIdRequete)
+    {
+        <h3>Request ID</h3>
+        <p>
+            <code>@Model.IdRequete</code>
+        </p>
+    }
+    @if (!hostingEnv.IsDevelopment())
+    {
+        <h3>Development Mode</h3>
+        <p>
+            Le passage à l'environnement de <strong>Développement</strong> affichera des informations plus détaillées sur l'erreur survenue.
+        </p>
+        <p>
+            <strong>L'environnement de développement ne doit pas être activé pour les applications déployées.</strong>
+            Cela peut entraîner l’affichage d’informations sensibles provenant d’exceptions aux utilisateurs finaux.
+            Pour le débogage local, activez l'environnement <strong>Développement</strong> en définissant la variable d'environnement <strong>ASPNETCORE_ENVIRONMENT</strong> sur <strong>Développement</strong>.
+            et redémarrer l'application.
+        </p>
+    }
+</div>

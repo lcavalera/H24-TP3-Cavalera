@@ -1,0 +1,74 @@
+﻿@model IEnumerable<ModernRecrut.MVC.Models.OffreEmploi>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Offres Emploi</h1>
+
+<p>
+    <a asp-action="Create">Ajouter nouveau</a>
+</p>
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Recherche offre emploi: <input type="text" name="filtre" value="@ViewData["actifFiltre"]" />
+            <input type="submit" value="Recherche" class="btn btn-default" />
+        </p>
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OffreEmploiID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Poste)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateAffichage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateFin)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OffreEmploiID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nom)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Poste)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateAffichage)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateFin)
+                </td>
+                <td>
+                    @Html.ActionLink("Modifier", "Edit", new { id=item.OffreEmploiID }) |
+                    @Html.ActionLink("Détails", "Details", new { id=item.OffreEmploiID }) |
+                    @Html.ActionLink("Supprimer", "Delete", new { id=item.OffreEmploiID })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

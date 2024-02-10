@@ -1,0 +1,33 @@
+﻿@model ModernRecrut.MVC.Models.OffreEmploi
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Ajouter aux favoris ?</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="All" class="text-danger"></div>
+                <input asp-for="OffreEmploiID" class="form-control" hidden />
+                
+                <input asp-for="Nom" class="form-control" hidden/>
+                <input asp-for="Poste" class="form-control" hidden />
+                <input asp-for="Description" class="form-control" hidden />
+                <input asp-for="DateAffichage" class="form-control" hidden />
+                <input asp-for="DateFin" class="form-control" hidden />
+            <div class="form-group">
+                <input type="submit" value="Ajouter" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Retour à la liste</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

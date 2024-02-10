@@ -1,0 +1,42 @@
+﻿@model ModernRecrut.MVC.Models.Postulation
+
+@{
+    ViewData["Title"] = "Postuler";
+}
+
+<h1>Postuler</h1>
+
+<h4>Postulation</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Postuler">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+          
+            <input asp-for="IdCandidat" hidden />
+            <input asp-for="OffreEmploiID" hidden />
+            <div class="form-group">
+                <label asp-for="PretentionSalariale" class="control-label"></label>
+                <input type="number" asp-for="PretentionSalariale" class="form-control" />
+                <span asp-validation-for="PretentionSalariale" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateDisponibilite" class="control-label"></label>
+                <input type="date" asp-for="DateDisponibilite" class="form-control" />
+                <span asp-validation-for="DateDisponibilite" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Postuler" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="ListePostulations" asp-controller="OffreEmploi">Retour</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
