@@ -25,6 +25,16 @@ stages:
       environnement: Dev
       bicepfile: $(bicepfile)
 
+- stage: 'BicepToProd'
+  displayName: 'Creation de ressources en Prod'
+  jobs:
+  - template: templates/bicep-template.yml
+    parameters:
+      serviceConnection: $(serviceConnection)
+      location: $(location)
+      environnement: Prod
+      bicepfile: $(bicepfile)
+
 - stage: 'Build'
   displayName: 'Build et execution des tests'
   jobs:
