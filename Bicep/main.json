@@ -1,0 +1,439 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.24.24.22086",
+      "templateHash": "14484671006777778726"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "allowedValues": [
+        "CanadaCentral",
+        "CanadaEast"
+      ]
+    },
+    "serverName": {
+      "type": "string"
+    },
+    "dbUser": {
+      "type": "string"
+    },
+    "dbPassword": {
+      "type": "securestring",
+      "minLength": 10,
+      "maxLength": 20
+    },
+    "sku": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Standard",
+        "Basic"
+      ]
+    },
+    "storageName": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "copy": [
+      {
+        "name": "apps",
+        "count": "[length(variables('appNames'))]",
+        "input": {
+          "name": "[variables('appNames')[copyIndex('apps')]]",
+          "isProd": "[if(equals(variables('appNames')[copyIndex('apps')], 'mvc'), true(), false())]"
+        }
+      },
+      {
+        "name": "dataBases",
+        "count": "[length(variables('dbNames'))]",
+        "input": {
+          "name": "[variables('dbNames')[copyIndex('dataBases')]]",
+          "sku": "[if(equals(variables('dbNames')[copyIndex('dataBases')], 'emplois'), 'Basic', parameters('sku'))]"
+        }
+      }
+    ],
+    "appNames": [
+      "postulations",
+      "documents",
+      "emplois",
+      "favoris",
+      "mvc"
+    ],
+    "dbNames": [
+      "postulations",
+      "emplois"
+    ]
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "appsService",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "apps": {
+            "value": "[variables('apps')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.24.24.22086",
+              "templateHash": "16972171364455445143"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "apps": {
+              "type": "array"
+            }
+          },
+          "resources": [
+            {
+              "copy": {
+                "name": "servicePlan",
+                "count": "[length(parameters('apps'))]"
+              },
+              "type": "Microsoft.Web/serverfarms",
+              "apiVersion": "2023-01-01",
+              "name": "[format('sp-{0}', parameters('apps')[copyIndex()].name)]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "[if(equals(parameters('apps')[copyIndex()].name, 'mvc'), 'S1', if(equals(parameters('apps')[copyIndex()].name, 'postulations'), 'B1', 'F1'))]"
+              },
+              "tags": {
+                "Application": "[parameters('apps')[copyIndex()].name]"
+              }
+            },
+            {
+              "copy": {
+                "name": "webApp",
+                "count": "[length(range(0, length(parameters('apps'))))]"
+              },
+              "type": "Microsoft.Web/sites",
+              "apiVersion": "2023-01-01",
+              "name": "[format('webapp-{0}-{1}', parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name, uniqueString(resourceGroup().id))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', format('sp-{0}', parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name))]"
+              },
+              "tags": {
+                "Application": "[parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', format('sp-{0}', parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name))]"
+              ]
+            },
+            {
+              "copy": {
+                "name": "stagingSlot",
+                "count": "[length(range(0, length(parameters('apps'))))]"
+              },
+              "condition": "[equals(parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].isProd, true())]",
+              "type": "Microsoft.Web/sites/slots",
+              "apiVersion": "2023-01-01",
+              "name": "[format('{0}/{1}', format('webapp-{0}-{1}', parameters('apps')[range(0, length(parameters('apps')))[range(0, length(parameters('apps')))[copyIndex()]]].name, uniqueString(resourceGroup().id)), 'staging')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', format('sp-{0}', parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name))]"
+              },
+              "tags": {
+                "Application": "[parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', format('sp-{0}', parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name))]",
+                "[resourceId('Microsoft.Web/sites', format('webapp-{0}-{1}', parameters('apps')[range(0, length(parameters('apps')))[range(0, length(parameters('apps')))[copyIndex()]]].name, uniqueString(resourceGroup().id)))]"
+              ]
+            },
+            {
+              "copy": {
+                "name": "scaleOutInRule",
+                "count": "[length(range(0, length(parameters('apps'))))]"
+              },
+              "condition": "[equals(parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].isProd, true())]",
+              "type": "Microsoft.Insights/autoscalesettings",
+              "apiVersion": "2022-10-01",
+              "name": "[format('sp-{0}', parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name)]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "enabled": true,
+                "profiles": [
+                  {
+                    "name": "Scale out/in condition",
+                    "capacity": {
+                      "maximum": "3",
+                      "default": "1",
+                      "minimum": "1"
+                    },
+                    "rules": [
+                      {
+                        "scaleAction": {
+                          "type": "ChangeCount",
+                          "direction": "Increase",
+                          "cooldown": "PT5M",
+                          "value": "1"
+                        },
+                        "metricTrigger": {
+                          "metricName": "CpuPercentage",
+                          "operator": "GreaterThanOrEqual",
+                          "timeAggregation": "Average",
+                          "threshold": 80,
+                          "metricResourceUri": "[resourceId('Microsoft.Web/serverfarms', format('sp-{0}', parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name))]",
+                          "timeWindow": "PT10M",
+                          "timeGrain": "PT1M",
+                          "statistic": "Average"
+                        }
+                      },
+                      {
+                        "scaleAction": {
+                          "type": "ChangeCount",
+                          "direction": "Decrease",
+                          "cooldown": "PT5M",
+                          "value": "1"
+                        },
+                        "metricTrigger": {
+                          "metricName": "CpuPercentage",
+                          "operator": "LessThanOrEqual",
+                          "timeAggregation": "Average",
+                          "threshold": 45,
+                          "metricResourceUri": "[resourceId('Microsoft.Web/serverfarms', format('sp-{0}', parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name))]",
+                          "timeWindow": "PT10M",
+                          "timeGrain": "PT1M",
+                          "statistic": "Average"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "targetResourceUri": "[resourceId('Microsoft.Web/serverfarms', format('sp-{0}', parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name))]"
+              },
+              "tags": {
+                "Application": "[parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', format('sp-{0}', parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name))]",
+                "[resourceId('Microsoft.Web/serverfarms', format('sp-{0}', parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name))]",
+                "[resourceId('Microsoft.Web/serverfarms', format('sp-{0}', parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name))]",
+                "[resourceId('Microsoft.Web/serverfarms', format('sp-{0}', parameters('apps')[range(0, length(parameters('apps')))[copyIndex()]].name))]"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "dataBases",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "serverName": {
+            "value": "[parameters('serverName')]"
+          },
+          "dataBases": {
+            "value": "[variables('dataBases')]"
+          },
+          "dbUser": {
+            "value": "[parameters('dbUser')]"
+          },
+          "dbPassword": {
+            "value": "[parameters('dbPassword')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.24.24.22086",
+              "templateHash": "10113981834225540183"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "serverName": {
+              "type": "string"
+            },
+            "dataBases": {
+              "type": "array"
+            },
+            "dbUser": {
+              "type": "string"
+            },
+            "dbPassword": {
+              "type": "securestring",
+              "minLength": 10,
+              "maxLength": 20
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Sql/servers",
+              "apiVersion": "2021-11-01",
+              "name": "[format('srv-{0}', parameters('serverName'))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "publicNetworkAccess": "Enabled",
+                "administratorLogin": "[parameters('dbUser')]",
+                "administratorLoginPassword": "[parameters('dbPassword')]",
+                "version": "12.0"
+              },
+              "tags": {
+                "Administrateur": "[parameters('dbUser')]"
+              }
+            },
+            {
+              "type": "Microsoft.Sql/servers/firewallRules",
+              "apiVersion": "2022-05-01-preview",
+              "name": "[format('{0}/{1}', format('srv-{0}', parameters('serverName')), 'AllowAllIps')]",
+              "properties": {
+                "endIpAddress": "255.255.255.255",
+                "startIpAddress": "0.0.0.0"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', format('srv-{0}', parameters('serverName')))]"
+              ]
+            },
+            {
+              "copy": {
+                "name": "sqlDatabase",
+                "count": "[length(parameters('dataBases'))]"
+              },
+              "type": "Microsoft.Sql/servers/databases",
+              "apiVersion": "2021-11-01",
+              "name": "[format('{0}/{1}', format('srv-{0}', parameters('serverName')), format('db-{0}', parameters('dataBases')[copyIndex()].name))]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "[parameters('dataBases')[copyIndex()].sku]",
+                "tier": "[parameters('dataBases')[copyIndex()].sku]"
+              },
+              "tags": {
+                "Application": "[parameters('dataBases')[copyIndex()].name]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', format('srv-{0}', parameters('serverName')))]"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "blobService",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "storageName": {
+            "value": "[parameters('storageName')]"
+          },
+          "containerName": {
+            "value": "documents"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.24.24.22086",
+              "templateHash": "7478429869888100267"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "storageName": {
+              "type": "string"
+            },
+            "containerName": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Storage/storageAccounts",
+              "apiVersion": "2023-01-01",
+              "name": "[parameters('storageName')]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "Standard_RAGRS"
+              },
+              "kind": "StorageV2"
+            },
+            {
+              "type": "Microsoft.Storage/storageAccounts/blobServices",
+              "apiVersion": "2023-01-01",
+              "name": "[format('{0}/{1}', parameters('storageName'), 'default')]",
+              "properties": {
+                "deleteRetentionPolicy": {
+                  "allowPermanentDelete": false,
+                  "days": 7
+                },
+                "containerDeleteRetentionPolicy": {
+                  "allowPermanentDelete": false,
+                  "days": 7
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+              "apiVersion": "2023-01-01",
+              "name": "[format('{0}/{1}/{2}', parameters('storageName'), 'default', parameters('containerName'))]",
+              "properties": {
+                "publicAccess": "None",
+                "metadata": {}
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageName'), 'default')]"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
