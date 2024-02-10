@@ -1,0 +1,44 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+variables:
+  buildConfiguration: 'Release'
+  serviceConnection: 'sc-azure'
+  artifactName: 'drop'
+
+
+stages:
+- stage: 'Build'
+  displayName: 'Build et execution des tests'
+  jobs:
+  - template: templates/build-template.yml
+    parameters:
+      buildConfiguration: $(buildConfiguration)
+      artifactName: $(artifactName)
+
+- stage: 'DeployToDev'
+  displayName: 'Déploiment en Dev'
+  dependsOn: 'Build'
+  jobs:
+  - template: templates/deploy-template.yml
+    parameters:
+      environment: 'Dev'
+      artifactName: $(artifactName)
+      serviceConnection: $(serviceConnection)
+      webAppName: 'webapp-etudiants'
+
+- stage: 'DeployToProd'
+  displayName: 'Déploiment en Prod'
+  dependsOn: 'DeployToDev'
+  jobs:
+  - template: templates/deploy-template.yml
+    parameters:
+      environment: 'Prod'
+      artifactName: $(artifactName)
+      serviceConnection: $(serviceConnection)
+      webAppName: 'webapp-etudiants-ex2'
