@@ -10,9 +10,21 @@ variables:
   buildConfiguration: 'Release'
   serviceConnection: 'sc-azure'
   artifactName: 'drop'
+  location: 'CanadaCentral'
+  bicepfile: '**/main.bicep'
 
 
 stages:
+- stage: 'BicepToDev'
+  displayName: 'Creation de ressources en Dev'
+  jobs:
+  - template: templates/bicep-template.yml
+    parameters:
+      serviceConnection: $(serviceConnection)
+      location: $(location)
+      environnement: Dev
+      bicepfile: $(bicepfile)
+
 - stage: 'Build'
   displayName: 'Build et execution des tests'
   jobs:
