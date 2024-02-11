@@ -1,0 +1,56 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  
+  serviceConnection: 'sc-azure'
+  location: 'CanadaCentral'
+  bicepfile: '**/main.bicep'
+  serverName: 'srv-modernrecruit'
+  dbUser: 'lcavalera'
+  storageName: st-modernrecruit
+
+stages:
+- stage: 'IacDev'
+  jobs:
+  - job: 'Deploiement'
+    variables:
+      rgDev: 'rg-dev-modernrecruit'
+
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: $(serviceConnection)
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az --version
+          az group create --name $(rgDev) --location $(location)
+          az deployment group create --resource-group $(rgDev) --template-file $(bicepfile) --parameters location=$(location) serverName=$(serverName) storageName=$(storageName) dbUser=$(dbUser) dbPassword=$(dbPassword)
+
+- stage: 'IacProd'
+  jobs:
+  - job: 'Deploiement'
+    variables:
+      rgProd: 'rg-prod-modernrecruit'
+
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: $(serviceConnection)
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az --version
+          az group create --name $(rgProd) --location $(location)
+          az deployment group create --resource-group $(rgProd) --template-file $(bicepfile) --parameters location=$(location) serverName=$(serverName) storageName=$(storageName) dbUser=$(dbUser) dbPassword=$(dbPassword)
+
+
