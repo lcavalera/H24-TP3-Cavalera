@@ -3,6 +3,10 @@ parameters:
     type: string
   - name: artifactName
     type: string
+  - name: appname
+    type: string
+  - name: publishWebProjects
+    type: boolean
 
 jobs:
   - job: 'WebBuild'
@@ -14,29 +18,29 @@ jobs:
       displayName: 'Restaurer les packages NuGet'
       inputs:
         command: 'restore'
-        projects: '**/*.csproj'
+        projects: '**/*$(appname).csproj'
         feedsToUse: 'select'
     
     - task: DotNetCoreCLI@2
       displayName: 'Génération de la solution'
       inputs:
         command: 'build'
-        projects: '**/*.csproj'
+        projects: '**/*$(appname).csproj'
         arguments: '--configuration ${{parameters.buildConfiguration}}'
     
     - task: DotNetCoreCLI@2
       displayName: 'Execution des tests unitaires'
       inputs:
         command: 'test'
-        projects: '**/*UnitTests.csproj'
+        projects: '**/*$(appname).UnitTests.csproj'
         arguments: '--configuration ${{parameters.buildConfiguration}}'
     
     - task: DotNetCoreCLI@2
-      displayName: 'Publication du project Etudiants.API'
+      displayName: 'Publication du project $(appname).API'
       inputs:
         command: 'publish'
-        publishWebProjects: false
-        projects: '**/Etudiants.API.csproj'
+        publishWebProjects: ${{parameters.publishWebProjects}}
+        projects: '**/*$(appname).csproj'
         arguments: '--configuration ${{parameters.buildConfiguration}} --output $(Build.ArtifactStagingDirectory)'
     
     - task: PublishBuildArtifacts@1
