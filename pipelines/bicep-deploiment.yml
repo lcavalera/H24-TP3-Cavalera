@@ -14,9 +14,6 @@ variables:
   serviceConnection: 'sc-azure'
   location: 'CanadaCentral'
   bicepfile: '**/main.bicep'
-  serverName: 'srv-modernrecruit'
-  dbUser: 'lcavalera'
-  storageName: st-modernrecruit
 
 stages:
 - stage: 'IacDev'
@@ -34,7 +31,7 @@ stages:
         inlineScript: |
           az --version
           az group create --name $(rgDev) --location $(location)
-          az deployment group create --resource-group $(rgDev) --template-file $(bicepfile) --parameters location=$(location) serverName=$(serverName) storageName=$(storageName) dbUser=$(dbUser) dbPassword=$(dbPassword)
+          az deployment group create --resource-group $(rgDev) --template-file $(bicepfile)
 
 - stage: 'IacProd'
   jobs:
@@ -51,6 +48,6 @@ stages:
         inlineScript: |
           az --version
           az group create --name $(rgProd) --location $(location)
-          az deployment group create --resource-group $(rgProd) --template-file $(bicepfile) --parameters location=$(location) serverName=$(serverName) storageName=$(storageName) dbUser=$(dbUser) dbPassword=$(dbPassword)
+          az deployment group create --resource-group $(rgProd) --template-file $(bicepfile)
 
 
