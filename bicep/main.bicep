@@ -10,7 +10,7 @@ var appNames =[
 ]
 
 
-module AppServices 'modules/appService.bicep' =  {
+module appServices 'modules/appService.bicep' =  {
   name: 'appService'
   params: {
     appNames : appNames
