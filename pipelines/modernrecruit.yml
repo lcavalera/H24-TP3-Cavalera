@@ -1,0 +1,123 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  buildConfiguration: 'Release'
+  serviceConnection: 'sc-azure'
+  artifactName: 'drop'
+
+  stages:
+
+  - stage: 'DocumentsDeployToDev'
+    displayName: 'Build et Deploy API Documents to Dev'
+
+    jobs:
+    - job: 'Build'
+      template: templates/build-template.yml
+      parameters:
+        buildConfiguration: $(buildConfiguration)
+        artifactName: $(artifactName)
+        appname: 'Documents.API'
+        publishWebProjects: false
+
+    - job: 'Deploy'
+      template: templates/deploy-template.yml
+      parameters:
+        environment: 'Dev'
+        artifactName: $(artifactName)
+        serviceConnection: $(serviceConnection)
+        webAppName: 'webapp-documents-*'
+
+
+  - stage: 'EmploisDeployToDev'
+    displayName: 'Build et Deploy API Emplois to Dev'
+
+    jobs:
+    - job: 'Build'
+      template: templates/build-template.yml
+      parameters:
+        buildConfiguration: $(buildConfiguration)
+        artifactName: $(artifactName)
+        appname: 'Emplois.API'
+        publishWebProjects: false
+
+    - job: 'Deploy'
+      template: templates/deploy-template.yml
+      parameters:
+        environment: 'Dev'
+        artifactName: $(artifactName)
+        serviceConnection: $(serviceConnection)
+        webAppName: 'webapp-emplois-*'
+
+  - stage: 'FavorisDeployToDev'
+    displayName: 'Build et Deploy API Favoris to Dev'
+
+    jobs:
+    - job: 'Build'
+      template: templates/build-template.yml
+      parameters:
+        buildConfiguration: $(buildConfiguration)
+        artifactName: $(artifactName)
+        appname: 'Favoris.API'
+        publishWebProjects: false
+
+    - job: 'Deploy'
+      template: templates/deploy-template.yml
+      parameters:
+        environment: 'Dev'
+        artifactName: $(artifactName)
+        serviceConnection: $(serviceConnection)
+        webAppName: 'webapp-favoris-*'
+
+  - stage: 'PostulationsDeployToDev'
+    displayName: 'Build et Deploy API Postulations to Dev'
+
+    jobs:
+    - job: 'Build'
+      template: templates/build-template.yml
+      parameters:
+        buildConfiguration: $(buildConfiguration)
+        artifactName: $(artifactName)
+        appname: 'Postulations.API'
+        publishWebProjects: false
+
+    - job: 'Deploy'
+      template: templates/deploy-template.yml
+      parameters:
+        environment: 'Dev'
+        artifactName: $(artifactName)
+        serviceConnection: $(serviceConnection)
+        webAppName: 'webapp-postulations-*'
+
+  - stage: 'BuildMvc'
+    displayName: 'Build et Deploy MVC to Dev'
+    dependsOn:
+    - 'DocumentsDeployToDev'
+    - 'EmploisDeployToDev'
+    - 'FavorisDeployToDev'
+    - 'PostulationsDeployToDev'
+
+    jobs:
+    - job:
+      template: templates/build-template.yml
+      parameters:
+        buildConfiguration: $(buildConfiguration)
+        artifactName: $(artifactName)
+        appname: 'MVC'
+        publishWebProjects: true
+
+    - job: 'Deploy'
+      template: templates/deploy-template.yml
+      parameters:
+        environment: 'Dev'
+        artifactName: $(artifactName)
+        serviceConnection: $(serviceConnection)
+        webAppName: 'webapp-mvc-*'
