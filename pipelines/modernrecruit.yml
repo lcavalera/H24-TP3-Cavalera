@@ -13,12 +13,7 @@ variables:
   buildConfiguration: 'Release'
   serviceConnection: 'sc-azure'
   artifactName: 'drop'
-  apps: [
-    'documents',
-    'emplois',
-    'favoris',
-    'postulations'
-  ]
+  apps: ['documents','emplois','favoris','postulations']
 
   stages:
 
