@@ -30,7 +30,6 @@ stages:
       artifactName: 'artifdocuments'
       appname: 'Documents.API'
 
-  - job:
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Dev'
@@ -49,7 +48,6 @@ stages:
       artifactName: 'artif-emplois'
       appname: 'Emplois.API'
 
-  - job:
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Dev'
@@ -68,7 +66,6 @@ stages:
       artifactName: 'artif-favoris'
       appname: 'Favoris.API'
 
-  - job:
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Dev'
@@ -87,7 +84,6 @@ stages:
       artifactName: 'artif-postulations'
       appname: 'Postulations.API'
 
-  - job:
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Dev'
@@ -111,7 +107,6 @@ stages:
       appname: 'MVC'
       publishWebProjects: true
 
-  - job:
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Dev'
