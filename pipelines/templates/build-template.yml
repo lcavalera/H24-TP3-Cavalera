@@ -7,6 +7,9 @@ parameters:
     type: string
   - name: publishWebProjects
     type: boolean
+    values:
+      - false
+      - true
     default: false
 
 jobs:
