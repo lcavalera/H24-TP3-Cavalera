@@ -52,7 +52,7 @@ variables:
         publishWebProjects: true
 
   - ${{each app in apps}}:
-    - stage: 'DeployToDev'
+    - stage: 'DeployApiToDev'
       displayName: 'Deploy api ${{app}} to Dev'
       dependsOn:
       - 'Build'
@@ -66,9 +66,9 @@ variables:
           webAppName: 'webapp-${{app}}-*'
 
 
-  - stage: 'DeployMvc'
+  - stage: 'DeployMvcToDev'
     displayName: 'Deploy MVC to Dev'
-    dependsOn: 'DeployToDev'
+    dependsOn: 'DeployApiToDev'
     jobs:
     - template: templates/deploy-template.yml
       parameters:
