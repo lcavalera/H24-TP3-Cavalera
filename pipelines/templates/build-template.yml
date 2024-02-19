@@ -19,8 +19,8 @@ jobs:
 
     steps:
 
-    - ${{ if eq(parameters.publishWebProjects, true) }}: 
     - task: DotNetCoreCLI@2
+      condition: eq(parameters.publishWebProjects, true)
       displayName: 'Publication du project $(appname).API'
       inputs:
         command: 'publish'
