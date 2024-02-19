@@ -23,7 +23,6 @@ stages:
   displayName: 'Build et Deploy API Documents to Dev'
   dependsOn: 'GenerationSolution'
   jobs:
-  - job:
   - template: templates/build-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
@@ -41,7 +40,6 @@ stages:
   displayName: 'Build et Deploy API Emplois to Dev'
   dependsOn: 'GenerationSolution'
   jobs:
-  - job:
   - template: templates/build-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
@@ -59,7 +57,6 @@ stages:
   displayName: 'Build et Deploy API Favoris to Dev'
   dependsOn: 'GenerationSolution'
   jobs:
-  - job:
   - template: templates/build-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
@@ -77,7 +74,6 @@ stages:
   displayName: 'Build et Deploy API Postulations to Dev'
   dependsOn: 'GenerationSolution'
   jobs:
-  - job:
   - template: templates/build-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
@@ -99,7 +95,6 @@ stages:
   - 'FavorisDeployToDev'
   - 'PostulationsDeployToDev'
   jobs:
-  - job:
   - template: templates/build-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
