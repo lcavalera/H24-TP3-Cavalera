@@ -6,119 +6,115 @@
 trigger:
 - main
 
-pool:
-  vmImage: ubuntu-latest
-
 variables:
   buildConfiguration: 'Release'
   serviceConnection: 'sc-azure'
   artifactName: 'drop'
 
-  stages:
+stages:
+- stage: 'GenerationSolution'
+  displayName: 'Generation Solution Modern Recruit'
+  jobs:
+  - template: templates/generation-template.yml
+    parameters:
+      buildConfiguration: $(buildConfiguration)
 
-  - stage: 'GenerationSolution'
-    displyName: 'Generation Solution Modern Recruit'
-    jobs:
-    - template: templates/generation-template.yml
-      parameters:
-        buildConfiguration: $(buildConfiguration)
+- stage: 'DocumentsDeployToDev'
+  displayName: 'Build et Deploy API Documents to Dev'
+  dependsOn: 'GenerationSolution'
+  jobs:
+  - job:
+  - template: templates/build-template.yml
+    parameters:
+      buildConfiguration: $(buildConfiguration)
+      artifactName: 'artifdocuments'
+      appname: 'Documents.API'
 
-  - stage: 'DocumentsDeployToDev'
-    displayName: 'Build et Deploy API Documents to Dev'
-    dependsOn: 'GenerationSolution'
-    jobs:
-    - job: 'Build'
-      template: templates/build-template.yml
-      parameters:
-        buildConfiguration: $(buildConfiguration)
-        artifactName: 'artif-documents'
-        appname: 'Documents.API'
+  - job:
+  - template: templates/deploy-template.yml
+    parameters:
+      environment: 'Dev'
+      artifactName: 'artif-documents'
+      serviceConnection: $(serviceConnection)
+      webAppName: 'webapp-documents-*'
 
-    - job: 'Deploy'
-      template: templates/deploy-template.yml
-      parameters:
-        environment: 'Dev'
-        artifactName: 'artif-documents'
-        serviceConnection: $(serviceConnection)
-        webAppName: 'webapp-documents-*'
+- stage: 'EmploisDeployToDev'
+  displayName: 'Build et Deploy API Emplois to Dev'
+  dependsOn: 'GenerationSolution'
+  jobs:
+  - job:
+  - template: templates/build-template.yml
+    parameters:
+      buildConfiguration: $(buildConfiguration)
+      artifactName: 'artif-emplois'
+      appname: 'Emplois.API'
 
-  - stage: 'EmploisDeployToDev'
-    displayName: 'Build et Deploy API Emplois to Dev'
-    dependsOn: 'GenerationSolution'
-    jobs:
-    - job: 'Build'
-      template: templates/build-template.yml
-      parameters:
-        buildConfiguration: $(buildConfiguration)
-        artifactName: 'artif-emplois'
-        appname: 'Emplois.API'
+  - job:
+  - template: templates/deploy-template.yml
+    parameters:
+      environment: 'Dev'
+      artifactName: 'artif-emplois'
+      serviceConnection: $(serviceConnection)
+      webAppName: 'webapp-emplois-*'
 
-    - job: 'Deploy'
-      template: templates/deploy-template.yml
-      parameters:
-        environment: 'Dev'
-        artifactName: 'artif-emplois'
-        serviceConnection: $(serviceConnection)
-        webAppName: 'webapp-emplois-*'
+- stage: 'FavorisDeployToDev'
+  displayName: 'Build et Deploy API Favoris to Dev'
+  dependsOn: 'GenerationSolution'
+  jobs:
+  - job:
+  - template: templates/build-template.yml
+    parameters:
+      buildConfiguration: $(buildConfiguration)
+      artifactName: 'artif-favoris'
+      appname: 'Favoris.API'
 
-  - stage: 'FavorisDeployToDev'
-    displayName: 'Build et Deploy API Favoris to Dev'
-    dependsOn: 'GenerationSolution'
-    jobs:
-    - job: 'Build'
-      template: templates/build-template.yml
-      parameters:
-        buildConfiguration: $(buildConfiguration)
-        artifactName: 'artif-favoris'
-        appname: 'Favoris.API'
+  - job:
+  - template: templates/deploy-template.yml
+    parameters:
+      environment: 'Dev'
+      artifactName: 'artif-favoris'
+      serviceConnection: $(serviceConnection)
+      webAppName: 'webapp-favoris-*'
 
-    - job: 'Deploy'
-      template: templates/deploy-template.yml
-      parameters:
-        environment: 'Dev'
-        artifactName: 'artif-favoris'
-        serviceConnection: $(serviceConnection)
-        webAppName: 'webapp-favoris-*'
+- stage: 'PostulationsDeployToDev'
+  displayName: 'Build et Deploy API Postulations to Dev'
+  dependsOn: 'GenerationSolution'
+  jobs:
+  - job:
+  - template: templates/build-template.yml
+    parameters:
+      buildConfiguration: $(buildConfiguration)
+      artifactName: 'artif-postulations'
+      appname: 'Postulations.API'
 
-  - stage: 'PostulationsDeployToDev'
-    displayName: 'Build et Deploy API Postulations to Dev'
-    dependsOn: 'GenerationSolution'
-    jobs:
-    - job: 'Build'
-      template: templates/build-template.yml
-      parameters:
-        buildConfiguration: $(buildConfiguration)
-        artifactName: 'artif-postulations'
-        appname: 'Postulations.API'
+  - job:
+  - template: templates/deploy-template.yml
+    parameters:
+      environment: 'Dev'
+      artifactName: 'artif-postulations'
+      serviceConnection: $(serviceConnection)
+      webAppName: 'webapp-postulations-*'
 
-    - job: 'Deploy'
-      template: templates/deploy-template.yml
-      parameters:
-        environment: 'Dev'
-        artifactName: 'artif-postulations'
-        serviceConnection: $(serviceConnection)
-        webAppName: 'webapp-postulations-*'
+- stage: 'MVCDeployToDev'
+  displayName: 'Build et Deploy MVC to Dev'
+  dependsOn:
+  - 'DocumentsDeployToDev'
+  - 'EmploisDeployToDev'
+  - 'FavorisDeployToDev'
+  - 'PostulationsDeployToDev'
+  jobs:
+  - job:
+  - template: templates/build-template.yml
+    parameters:
+      buildConfiguration: $(buildConfiguration)
+      artifactName: 'artif-mvc'
+      appname: 'MVC'
+      publishWebProjects: true
 
-  - stage: 'MVCDeployToDev'
-    displayName: 'Build et Deploy MVC to Dev'
-    dependsOn:
-    - 'DocumentsDeployToDev'
-    - 'EmploisDeployToDev'
-    - 'FavorisDeployToDev'
-    - 'PostulationsDeployToDev'
-    jobs:
-    - job: 'Build'
-      template: templates/build-template.yml
-      parameters:
-        buildConfiguration: $(buildConfiguration)
-        artifactName: 'artif-mvc'
-        appname: 'MVC'
-        publishWebProjects: true
-
-    - job: 'Deploy'
-      template: templates/deploy-template.yml
-      parameters:
-        environment: 'Dev'
-        artifactName: 'artif-mvc'
-        serviceConnection: $(serviceConnection)
-        webAppName: 'webapp-mvc-*'
+  - job:
+  - template: templates/deploy-template.yml
+    parameters:
+      environment: 'Dev'
+      artifactName: 'artif-mvc'
+      serviceConnection: $(serviceConnection)
+      webAppName: 'webapp-mvc-*'
