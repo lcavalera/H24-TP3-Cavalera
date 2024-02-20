@@ -8,9 +8,13 @@ parameters:
   - name: publishWebProjects
     type: boolean
     default: false
+  - name: DependsOn
+    type: object
+    default: []
 
 jobs:
   - job: 'Build'
+    dependsOn: ${{parameters.DependsOn}}
     pool:
       vmImage: ubuntu-latest
 
