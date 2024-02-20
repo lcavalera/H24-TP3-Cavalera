@@ -163,7 +163,7 @@ stages:
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
       appName: $(appname)
-      webAppName: 'webapp-documents-35savyvwj5fym'
+      webAppName: 'webapp-documents-tcalemx7mxa56'
 
 - stage: 'EmploisDeployToProd'
   displayName: 'Emplois API Deploy to Prod'
@@ -184,7 +184,7 @@ stages:
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
       appName: $(appname)
-      webAppName: 'webapp-emplois-35savyvwj5fym'
+      webAppName: 'webapp-emplois-tcalemx7mxa56'
 
 - stage: 'FavorisDeployToProd'
   displayName: 'Favoris API Deploy to Prod'
@@ -205,7 +205,7 @@ stages:
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
       appName: $(appname)
-      webAppName: 'webapp-favoris-35savyvwj5fym'
+      webAppName: 'webapp-favoris-tcalemx7mxa56'
 
 - stage: 'PostulationsDeployToProd'
   displayName: 'Postulations API Deploy to Prod'
@@ -226,7 +226,7 @@ stages:
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
       appName: $(appname)
-      webAppName: 'webapp-postulations-35savyvwj5fym'
+      webAppName: 'webapp-postulations-tcalemx7mxa56'
 
 - stage: 'MVCDeployToProd'
   displayName: 'MVC Deploy to Prod'
@@ -246,4 +246,4 @@ stages:
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
       appName: $(appname)
-      webAppName: 'webapp-mvc-35savyvwj5fym'
+      webAppName: 'webapp-mvc-tcalemx7mxa56'
