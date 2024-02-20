@@ -39,7 +39,7 @@ stages:
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
-      webAppName: 'webapp-documents-*'
+      webAppName: 'webapp-documents-35savyvwj5fym'
 
 - stage: 'EmploisDeployToDev'
   displayName: 'Emplois API Deploy to Dev'
@@ -62,7 +62,7 @@ stages:
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
-      webAppName: 'webapp-emplois-*'
+      webAppName: 'webapp-emplois-35savyvwj5fym'
 
 - stage: 'FavorisDeployToDev'
   displayName: 'Favoris API Deploy to Dev'
@@ -85,7 +85,7 @@ stages:
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
-      webAppName: 'webapp-favoris-*'
+      webAppName: 'webapp-favoris-35savyvwj5fym'
 
 - stage: 'PostulationsDeployToDev'
   displayName: 'Postulations API Deploy to Dev'
@@ -108,7 +108,7 @@ stages:
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
-      webAppName: 'webapp-postulations-*'
+      webAppName: 'webapp-postulations-35savyvwj5fym'
 
 - stage: 'MVCDeployToDev'
   displayName: 'MVC API Deploy to Dev'
@@ -136,4 +136,4 @@ stages:
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
-      webAppName: 'webapp-mvc-*'
+      webAppName: 'webapp-mvc-35savyvwj5fym'
