@@ -31,4 +31,4 @@ jobs:
             azureSubscription: '${{parameters.serviceConnection}}'
             appType: 'webApp'
             appName: '${{parameters.webAppName}}'
-            package: '$(System.ArtifactsDirectory)/**/*.zip'
+            package: '$(System.ArtifactsDirectory)/**/${{parameters.artifactName}}.zip'
