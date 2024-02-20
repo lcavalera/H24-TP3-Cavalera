@@ -10,7 +10,7 @@ parameters:
     default: false
 
 jobs:
-  - job:
+  - job: 'Build'
     pool:
       vmImage: ubuntu-latest
 
