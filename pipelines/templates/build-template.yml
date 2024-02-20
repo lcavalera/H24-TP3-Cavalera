@@ -13,7 +13,7 @@ parameters:
     default: []
 
 jobs:
-  - job: 'Build'
+  - job:
     dependsOn: ${{parameters.DependsOn}}
     pool:
       vmImage: ubuntu-latest
