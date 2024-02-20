@@ -9,13 +9,9 @@ parameters:
     type: string
   - name: appName
     type: string
-  - name: DependsOn
-    type: object
-    default: []
 
 jobs:
   - deployment: 'Deploy'
-    dependsOn: ${{parameters.DependsOn}}
     pool:
       vmImage: ubuntu-latest
     environment: '${{parameters.environment}}'
