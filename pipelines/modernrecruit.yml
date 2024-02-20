@@ -9,6 +9,7 @@ trigger:
 variables:
   buildConfiguration: 'Release'
   serviceConnection: 'sc-azure'
+  artifactName: 'drop'
 
 stages:
 - stage: 'Generation'
@@ -22,7 +23,7 @@ stages:
   displayName: 'Documents API Deploy to Dev'
   dependsOn: 'Generation'
   variables:
-    artifactName: 'artifdocuments'
+    appname: 'Documents.API'
 
   jobs:
   - job: 'BuildDocuments'
@@ -30,7 +31,7 @@ stages:
     parameters:
       buildConfiguration: $(buildConfiguration)
       artifactName: $(artifactName)
-      appname: 'Documents.API'
+      appname: $(appname)
 
   - job: 'DeployDocuments'
     dependsOn: 'BuildDocuments'
@@ -39,13 +40,14 @@ stages:
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
+      appName: $(appname)
       webAppName: 'webapp-documents-35savyvwj5fym'
 
 - stage: 'EmploisDeployToDev'
   displayName: 'Emplois API Deploy to Dev'
   dependsOn: 'Generation'
   variables:
-    artifactName: 'artifemplois'
+    appname: 'Emplois.API'
 
   jobs:
   - job: 'BuildEmplois'
@@ -53,7 +55,7 @@ stages:
     parameters:
       buildConfiguration: $(buildConfiguration)
       artifactName: $(artifactName)
-      appname: 'Emplois.API'
+      appname: $(appname)
 
   - job: 'DeployEmplois'
     dependsOn: 'BuildEmplois'
@@ -62,13 +64,14 @@ stages:
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
+      appName: $(appname)
       webAppName: 'webapp-emplois-35savyvwj5fym'
 
 - stage: 'FavorisDeployToDev'
   displayName: 'Favoris API Deploy to Dev'
   dependsOn: 'Generation'
   variables:
-    artifactName: 'artiffavoris'
+    appname: 'Favoris.API'
 
   jobs:
   - job: 'BuildFavoris'
@@ -76,7 +79,7 @@ stages:
     parameters:
       buildConfiguration: $(buildConfiguration)
       artifactName: $(artifactName)
-      appname: 'Favoris.API'
+      appname: $(appname)
 
   - job: 'DeployFavoris'
     dependsOn: 'BuildFavoris'
@@ -85,13 +88,14 @@ stages:
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
+      appName: $(appname)
       webAppName: 'webapp-favoris-35savyvwj5fym'
 
 - stage: 'PostulationsDeployToDev'
   displayName: 'Postulations API Deploy to Dev'
   dependsOn: 'Generation'
   variables:
-    artifactName: 'artifpostulations'
+    appname: 'Postulations.API'
 
   jobs:
   - job: 'BuildPostulations'
@@ -99,7 +103,7 @@ stages:
     parameters:
       buildConfiguration: $(buildConfiguration)
       artifactName: $(artifactName)
-      appname: 'Postulations.API'
+      appname: $(appname)
 
   - job: 'DeployPostulations'
     dependsOn: 'BuildPostulations'
@@ -108,6 +112,7 @@ stages:
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
+      appName: $(appname)
       webAppName: 'webapp-postulations-35savyvwj5fym'
 
 - stage: 'MVCDeployToDev'
@@ -118,7 +123,7 @@ stages:
   - 'FavorisDeployToDev'
   - 'PostulationsDeployToDev'
   variables:
-    artifactName: 'artifmvc'
+    appname: 'MVC'
 
   jobs:
   - job: 'BuildMvc'
@@ -126,7 +131,7 @@ stages:
     parameters:
       buildConfiguration: $(buildConfiguration)
       artifactName: $(artifactName)
-      appname: 'MVC'
+      appname: $(appname)
       publishWebProjects: true
 
   - job: 'DeployMvc'
@@ -136,4 +141,5 @@ stages:
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
+      appName: $(appname)
       webAppName: 'webapp-mvc-35savyvwj5fym'
