@@ -11,101 +11,102 @@ variables:
   serviceConnection: 'sc-azure'
 
 stages:
-- stage: 'Build'
-  displayName: 'Generation solution et build projets'
+- stage: 'Generation'
+  displayName: 'Generation solution Modern Recruit'
   jobs:
-
-  - job: 'Generation'
   - template: templates/generation-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
 
-  - job: 'BuildDocuments'
-    dependsOn: 'Generation'
-  - template: templates/build-template.yml
-    parameters:
-      buildConfiguration: $(buildConfiguration)
-      artifactName: 'artifdocuments'
-      appname: 'Documents.API'
-
-  - job: 'BuildEmplois'
-    dependsOn: 'Generation'
-  - template: templates/build-template.yml
-    parameters:
-      buildConfiguration: $(buildConfiguration)
-      artifactName: 'artifemplois'
-      appname: 'Emplois.API'
-
-  - job: 'BuildFavoris'
-    dependsOn: 'Generation'
-  - template: templates/build-template.yml
-    parameters:
-      buildConfiguration: $(buildConfiguration)
-      artifactName: 'artiffavoris'
-      appname: 'Favoris.API'
-
-  - job: 'BuildPostulations'
-    dependsOn: 'Generation'
-  - template: templates/build-template.yml
-    parameters:
-      buildConfiguration: $(buildConfiguration)
-      artifactName: 'artifpostulations'
-      appname: 'Postulations.API'
-
-  - job: 'BuildMvc'
-    dependsOn: 'Generation'
-  - template: templates/build-template.yml
-    parameters:
-      buildConfiguration: $(buildConfiguration)
-      artifactName: 'artifmvc'
-      appname: 'MVC'
-      publishWebProjects: true
-
 - stage: 'DocumentsDeployToDev'
   displayName: 'Documents API Deploy to Dev'
   dependsOn: 'Build'
+  variables:
+    artifactName: 'artifdocuments'
 
   jobs:
+  - job: 'BuildDocuments'
+  - template: templates/build-template.yml
+    parameters:
+      buildConfiguration: $(buildConfiguration)
+      artifactName: $(artifactName)
+      appname: 'Documents.API'
+
+  - job: 'DeployDocuments'
+    dependsOn: 'BuildDocuments'
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Dev'
-      artifactName: 'artifdocuments'
+      artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
       webAppName: 'webapp-documents-*'
 
 - stage: 'EmploisDeployToDev'
   displayName: 'Emplois API Deploy to Dev'
   dependsOn: 'Build'
+  variables:
+    artifactName: 'artifemplois'
 
   jobs:
+  - job: 'BuildEmplois'
+  - template: templates/build-template.yml
+    parameters:
+      buildConfiguration: $(buildConfiguration)
+      artifactName: $(artifactName)
+      appname: 'Emplois.API'
+
+  - job: 'DeployEmplois'
+    dependsOn: 'BuildEmplois'
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Dev'
-      artifactName: 'artifemplois'
+      artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
       webAppName: 'webapp-emplois-*'
 
 - stage: 'FavorisDeployToDev'
   displayName: 'Favoris API Deploy to Dev'
   dependsOn: 'Build'
+  variables:
+    artifactName: 'artiffavoris'
 
   jobs:
+  - job: 'BuildFavoris'
+  - template: templates/build-template.yml
+    parameters:
+      buildConfiguration: $(buildConfiguration)
+      artifactName: $(artifactName)
+      appname: 'Favoris.API'
+
+  - job: 'DeployFavoris'
+    dependsOn: 'BuildFavoris'
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Dev'
-      artifactName: 'artiffavoris'
+      artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
       webAppName: 'webapp-favoris-*'
 
 - stage: 'PostulationsDeployToDev'
   displayName: 'Postulations API Deploy to Dev'
   dependsOn: 'Build'
+  variables:
+    artifactName: 'artifpostulations'
 
   jobs:
+  - job: 'BuildPostulations'
+  - template: templates/build-template.yml
+    parameters:
+      buildConfiguration: $(buildConfiguration)
+      artifactName: $(artifactName)
+      appname: 'Postulations.API'
+
+  - job: 'DeployPostulations'
+    dependsOn: 'BuildPostulations'
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Dev'
-      artifactName: 'artifpostulations'
+      artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
       webAppName: 'webapp-postulations-*'
 
@@ -116,11 +117,23 @@ stages:
   - 'EmploisDeployToDev'
   - 'FavorisDeployToDev'
   - 'PostulationsDeployToDev'
+  variables:
+    artifactName: 'artifmvc'
 
   jobs:
+  - job: 'BuildMvc'
+  - template: templates/build-template.yml
+    parameters:
+      buildConfiguration: $(buildConfiguration)
+      artifactName: $(artifactName)
+      appname: 'MVC'
+      publishWebProjects: true
+
+  - job: 'DeployMvc'
+    dependsOn: 'BuildMvc'
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Dev'
-      artifactName: 'artifmvc'
+      artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
       webAppName: 'webapp-mvc-*'
