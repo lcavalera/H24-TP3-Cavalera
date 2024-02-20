@@ -3,14 +3,14 @@ param sku string = 'F1'
 
 var appNames =[
    'mvc'
-   'postulation'
+   'postulations'
    'emplois'
    'documents'
    'favoris'
 ]
 
 
-module appServices 'modules/appService.bicep' =  {
+module AppServices 'modules/appService.bicep' =  {
   name: 'appService'
   params: {
     appNames : appNames

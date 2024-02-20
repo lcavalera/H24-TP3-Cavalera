@@ -8,7 +8,7 @@ namespace ModernRecrut.Favoris.ApplicationCore.Models.DTO
 {
     public class TransactionFavoris
     {
-        public string Clee { get; set; }
-        public OffreEmploi Offre { get; set; }
+        public string? Clee { get; set; }
+        public OffreEmploi? Offre { get; set; }
     }
 }

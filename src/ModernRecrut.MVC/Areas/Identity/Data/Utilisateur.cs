@@ -16,10 +16,10 @@ public enum Type
 public class Utilisateur : IdentityUser
 {
     [Required]
-    public string Nom {  get; set; }
+    public string? Nom {  get; set; }
     [Required]
     [Display(Name ="Prénom")]
-    public string Prenom { get; set; }
+    public string? Prenom { get; set; }
     public Type Type { get; set; }
     [NotMapped]
     public string NomComplet { get { return Prenom + " " + Nom; }  }

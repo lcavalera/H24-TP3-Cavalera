@@ -15,7 +15,7 @@ namespace ModernRecrut.Emplois.Infrastructure.Data
 
         }
 
-        public DbSet<OffreEmploi> OffresEmploi { get; set; }
+        public DbSet<OffreEmploi>? OffresEmploi { get; set; }
 
     }
 }

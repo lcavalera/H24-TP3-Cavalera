@@ -55,7 +55,7 @@ namespace ModernRecrut.Emplois.API.Controllers
         /// <summary>
         /// Ajoute une offre emploi à la base de donnée
         /// </summary>
-        /// <param name="emprunt">l'offre emploi à ajouter</param>
+        /// <param name="offreEmploi">l'offre emploi à ajouter</param>
         /// <response code="201">offre emploi ajouté avec succès</response>
         /// <response code="400">Model Invalide, mauvaise requête</response>
         /// <response code="500">service indisponible pour le moment</response>
@@ -77,7 +77,7 @@ namespace ModernRecrut.Emplois.API.Controllers
         /// Modification d'une offre emploi
         /// </summary>
         /// <param name="id">id de l'offre emploi à modifier</param>
-        /// <param name="emprunt">l'offre emploi avec changement</param>
+        /// <param name="offreEmploi">l'offre emploi avec changement</param>
         /// <response code="200">offre emploi modifié avec succès</response>
         /// <response code="400">Model Invalide, mauvaise requête</response>
         /// <response code="404">offre emploi introuvable pour l'id spécifié</response>

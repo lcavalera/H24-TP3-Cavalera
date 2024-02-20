@@ -9,7 +9,7 @@ namespace ModernRecrut.Favoris.ApplicationCore.Models
     public class Favoris
     {
         public string? Id { get; set; }
-        public List<OffreEmploi> Contenu { get; set; }
+        public List<OffreEmploi>? Contenu { get; set; }
 
         //protected string GetIPAddress()
         //{
