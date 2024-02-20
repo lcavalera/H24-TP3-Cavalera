@@ -12,99 +12,105 @@ variables:
   artifactName: 'drop'
 
 stages:
-- stage: 'Generation'
+- stage: 'Build'
   displayName: 'Generation solution Modern Recruit'
   jobs:
   - template: templates/generation-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
 
-- stage: 'DocumentsDeployToDev'
-  displayName: 'Documents API Deploy to Dev'
-  dependsOn: 'Generation'
-  variables:
-    appname: 'Documents.API'
-
-  jobs:
+# Documents API build
   - template: templates/build-template.yml
     parameters:
+      DependsOn: 'Generation'
       buildConfiguration: $(buildConfiguration)
       artifactName: $(artifactName)
-      appname: $(appname)
+      appname: 'Documents.API'
 
+# Emplois API build
+  - template: templates/build-template.yml
+    parameters:
+      DependsOn: 'Generation'
+      buildConfiguration: $(buildConfiguration)
+      artifactName: $(artifactName)
+      appname: 'Emplois.API'
+
+# Favoris API build
+  - template: templates/build-template.yml
+    parameters:
+      DependsOn: 'Generation'
+      buildConfiguration: $(buildConfiguration)
+      artifactName: $(artifactName)
+      appname: 'Favoris.API'
+
+# Postulations API build
+  - template: templates/build-template.yml
+    parameters:
+      DependsOn: 'Generation'
+      buildConfiguration: $(buildConfiguration)
+      artifactName: $(artifactName)
+      appname: 'Postulations.API'
+
+# MVC build
+  - template: templates/build-template.yml
+    parameters:
+      DependsOn: 'Generation'
+      buildConfiguration: $(buildConfiguration)
+      artifactName: $(artifactName)
+      appname: 'MVC'
+      publishWebProjects: true
+
+
+- stage: 'DocumentsDeployToDev'
+  displayName: 'Documents API Deploy to Dev'
+  dependsOn: 'Build'
+
+  jobs:
   - template: templates/deploy-template.yml
     parameters:
-      DependsOn: 'Build'
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
-      appName: $(appname)
+      appName: 'Documents.API'
       webAppName: 'webapp-documents-35savyvwj5fym'
 
 - stage: 'EmploisDeployToDev'
   displayName: 'Emplois API Deploy to Dev'
-  dependsOn: 'Generation'
-  variables:
-    appname: 'Emplois.API'
+  dependsOn: 'Build'
 
   jobs:
-  - template: templates/build-template.yml
-    parameters:
-      buildConfiguration: $(buildConfiguration)
-      artifactName: $(artifactName)
-      appname: $(appname)
-
   - template: templates/deploy-template.yml
     parameters:
-      DependsOn: 'Build'
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
-      appName: $(appname)
+      appName: 'Emplois.API'
       webAppName: 'webapp-emplois-35savyvwj5fym'
 
 - stage: 'FavorisDeployToDev'
   displayName: 'Favoris API Deploy to Dev'
-  dependsOn: 'Generation'
-  variables:
-    appname: 'Favoris.API'
+  dependsOn: 'Build'
 
   jobs:
-  - template: templates/build-template.yml
-    parameters:
-      buildConfiguration: $(buildConfiguration)
-      artifactName: $(artifactName)
-      appname: $(appname)
-
   - template: templates/deploy-template.yml
     parameters:
-      DependsOn: 'Build'
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
-      appName: $(appname)
+      appName: 'Favoris.API'
       webAppName: 'webapp-favoris-35savyvwj5fym'
 
 - stage: 'PostulationsDeployToDev'
   displayName: 'Postulations API Deploy to Dev'
-  dependsOn: 'Generation'
-  variables:
-    appname: 'Postulations.API'
+  dependsOn: 'Build'
 
   jobs:
-  - template: templates/build-template.yml
-    parameters:
-      buildConfiguration: $(buildConfiguration)
-      artifactName: $(artifactName)
-      appname: $(appname)
-
   - template: templates/deploy-template.yml
     parameters:
-      DependsOn: 'Build'
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
-      appName: $(appname)
+      appName: 'Postulations.API'
       webAppName: 'webapp-postulations-35savyvwj5fym'
 
 - stage: 'MVCDeployToDev'
@@ -114,24 +120,14 @@ stages:
   - 'EmploisDeployToDev'
   - 'FavorisDeployToDev'
   - 'PostulationsDeployToDev'
-  variables:
-    appname: 'MVC'
 
   jobs:
-  - template: templates/build-template.yml
-    parameters:
-      buildConfiguration: $(buildConfiguration)
-      artifactName: $(artifactName)
-      appname: $(appname)
-      publishWebProjects: true
-
   - template: templates/deploy-template.yml
     parameters:
-      DependsOn: 'Build'
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
-      appName: $(appname)
+      appName: 'MVC'
       webAppName: 'webapp-mvc-35savyvwj5fym'
 
 - stage: 'DocumentsDeployToProd'
@@ -143,16 +139,13 @@ stages:
   - 'PostulationsDeployToDev'
   - 'MVCDeployToDev'
 
-  variables:
-    appname: 'Documents.API'
-
   jobs:
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Prod'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
-      appName: $(appname)
+      appName: 'Documents.API'
       webAppName: 'webapp-documents-tcalemx7mxa56'
 
 - stage: 'EmploisDeployToProd'
@@ -164,16 +157,13 @@ stages:
   - 'PostulationsDeployToDev'
   - 'MVCDeployToDev'
 
-  variables:
-    appname: 'Emplois.API'
-
   jobs:
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Prod'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
-      appName: $(appname)
+      appName: 'Emplois.API'
       webAppName: 'webapp-emplois-tcalemx7mxa56'
 
 - stage: 'FavorisDeployToProd'
@@ -185,16 +175,13 @@ stages:
   - 'PostulationsDeployToDev'
   - 'MVCDeployToDev'
 
-  variables:
-    appname: 'Favoris.API'
-
   jobs:
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Prod'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
-      appName: $(appname)
+      appName: 'Favoris.API'
       webAppName: 'webapp-favoris-tcalemx7mxa56'
 
 - stage: 'PostulationsDeployToProd'
@@ -206,16 +193,13 @@ stages:
   - 'PostulationsDeployToDev'
   - 'MVCDeployToDev'
 
-  variables:
-    appname: 'Postulations.API'
-
   jobs:
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Prod'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
-      appName: $(appname)
+      appName: 'Postulations.API'
       webAppName: 'webapp-postulations-tcalemx7mxa56'
 
 - stage: 'MVCDeployToProd'
@@ -226,14 +210,11 @@ stages:
   - 'FavorisDeployToProd'
   - 'PostulationsDeployToProd'
 
-  variables:
-    appname: 'MVC'
-
   jobs:
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Prod'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
-      appName: $(appname)
+      appName: 'MVC'
       webAppName: 'webapp-mvc-tcalemx7mxa56'
