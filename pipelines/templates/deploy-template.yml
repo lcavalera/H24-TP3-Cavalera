@@ -9,7 +9,7 @@ parameters:
     type: string
 
 jobs:
-  - deployment: 'WebDeploy'
+  - deployment: 'Deploy'
     pool:
       vmImage: ubuntu-latest
     environment: '${{parameters.environment}}'
