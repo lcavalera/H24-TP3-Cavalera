@@ -143,3 +143,117 @@ stages:
       serviceConnection: $(serviceConnection)
       appName: $(appname)
       webAppName: 'webapp-mvc-35savyvwj5fym'
+
+- stage: 'DocumentsDeployToProd'
+  displayName: 'Documents API Deploy to Prod'
+  dependsOn:
+  - 'DocumentsDeployToDev'
+  - 'EmploisDeployToDev'
+  - 'FavorisDeployToDev'
+  - 'PostulationsDeployToDev'
+  - 'MVCDeployToDev'
+
+  variables:
+    appname: 'Documents.API'
+
+  jobs:
+  - job: 'DeployDocuments'
+    dependsOn: 'BuildDocuments'
+  - template: templates/deploy-template.yml
+    parameters:
+      environment: 'Prod'
+      artifactName: $(artifactName)
+      serviceConnection: $(serviceConnection)
+      appName: $(appname)
+      webAppName: 'webapp-documents-35savyvwj5fym'
+
+- stage: 'EmploisDeployToProd'
+  displayName: 'Emplois API Deploy to Prod'
+  dependsOn:
+  - 'DocumentsDeployToDev'
+  - 'EmploisDeployToDev'
+  - 'FavorisDeployToDev'
+  - 'PostulationsDeployToDev'
+  - 'MVCDeployToDev'
+
+  variables:
+    appname: 'Emplois.API'
+
+  jobs:
+  - job: 'DeployEmplois'
+    dependsOn: 'BuildEmplois'
+  - template: templates/deploy-template.yml
+    parameters:
+      environment: 'Prod'
+      artifactName: $(artifactName)
+      serviceConnection: $(serviceConnection)
+      appName: $(appname)
+      webAppName: 'webapp-emplois-35savyvwj5fym'
+
+- stage: 'FavorisDeployToProd'
+  displayName: 'Favoris API Deploy to Prod'
+  dependsOn:
+  - 'DocumentsDeployToDev'
+  - 'EmploisDeployToDev'
+  - 'FavorisDeployToDev'
+  - 'PostulationsDeployToDev'
+  - 'MVCDeployToDev'
+
+  variables:
+    appname: 'Favoris.API'
+
+  jobs:
+  - job: 'DeployFavoris'
+    dependsOn: 'BuildFavoris'
+  - template: templates/deploy-template.yml
+    parameters:
+      environment: 'Prod'
+      artifactName: $(artifactName)
+      serviceConnection: $(serviceConnection)
+      appName: $(appname)
+      webAppName: 'webapp-favoris-35savyvwj5fym'
+
+- stage: 'PostulationsDeployToProd'
+  displayName: 'Postulations API Deploy to Prod'
+  dependsOn:
+  - 'DocumentsDeployToDev'
+  - 'EmploisDeployToDev'
+  - 'FavorisDeployToDev'
+  - 'PostulationsDeployToDev'
+  - 'MVCDeployToDev'
+
+  variables:
+    appname: 'Postulations.API'
+
+  jobs:
+  - job: 'DeployPostulations'
+    dependsOn: 'BuildPostulations'
+  - template: templates/deploy-template.yml
+    parameters:
+      environment: 'Prod'
+      artifactName: $(artifactName)
+      serviceConnection: $(serviceConnection)
+      appName: $(appname)
+      webAppName: 'webapp-postulations-35savyvwj5fym'
+
+- stage: 'MVCDeployToProd'
+  displayName: 'MVC Deploy to Prod'
+  dependsOn:
+  - 'DocumentsDeployToProd'
+  - 'EmploisDeployToProd'
+  - 'FavorisDeployToProd'
+  - 'PostulationsDeployToProd'
+
+  variables:
+    appname: 'MVC'
+
+  jobs:
+  - job: 'DeployMvc'
+    dependsOn: 'BuildMvc'
+  - template: templates/deploy-template.yml
+    parameters:
+      environment: 'Prod'
+      artifactName: $(artifactName)
+      serviceConnection: $(serviceConnection)
+      appName: $(appname)
+      webAppName: 'webapp-mvc-35savyvwj5fym'
