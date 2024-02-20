@@ -3,7 +3,7 @@ parameters:
     type: string
 
 jobs:
-  - job: 'GenerationSolution'
+  - job: 'Generation'
     pool:
       vmImage: ubuntu-latest
 
