@@ -9,10 +9,9 @@ parameters:
     type: boolean
     default: false
 
-pool:
-  vmImage: ubuntu-latest
 
-  steps:
+
+steps:
 
   - task: DotNetCoreCLI@2
     condition: ${{ eq(parameters.publishWebProjects, true) }}
