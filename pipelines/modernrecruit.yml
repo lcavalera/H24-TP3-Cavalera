@@ -48,17 +48,15 @@ stages:
     appname: 'Emplois.API'
 
   jobs:
-  - job: 'BuildEmplois'
   - template: templates/build-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
       artifactName: $(artifactName)
       appname: $(appname)
 
-  - job: 'DeployEmplois'
-    dependsOn: 'BuildEmplois'
   - template: templates/deploy-template.yml
     parameters:
+      DependsOn: 'Build'
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
@@ -72,17 +70,15 @@ stages:
     appname: 'Favoris.API'
 
   jobs:
-  - job: 'BuildFavoris'
   - template: templates/build-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
       artifactName: $(artifactName)
       appname: $(appname)
 
-  - job: 'DeployFavoris'
-    dependsOn: 'BuildFavoris'
   - template: templates/deploy-template.yml
     parameters:
+      DependsOn: 'Build'
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
@@ -96,17 +92,15 @@ stages:
     appname: 'Postulations.API'
 
   jobs:
-  - job: 'BuildPostulations'
   - template: templates/build-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
       artifactName: $(artifactName)
       appname: $(appname)
 
-  - job: 'DeployPostulations'
-    dependsOn: 'BuildPostulations'
   - template: templates/deploy-template.yml
     parameters:
+      DependsOn: 'Build'
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
@@ -124,7 +118,6 @@ stages:
     appname: 'MVC'
 
   jobs:
-  - job: 'BuildMvc'
   - template: templates/build-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
@@ -132,10 +125,9 @@ stages:
       appname: $(appname)
       publishWebProjects: true
 
-  - job: 'DeployMvc'
-    dependsOn: 'BuildMvc'
   - template: templates/deploy-template.yml
     parameters:
+      DependsOn: 'Build'
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
