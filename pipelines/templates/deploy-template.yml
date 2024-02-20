@@ -7,6 +7,8 @@ parameters:
     type: string
   - name: webAppName
     type: string
+  - name: appName
+    type: string
 
 jobs:
   - deployment: 'Deploy'
@@ -31,4 +33,4 @@ jobs:
             azureSubscription: '${{parameters.serviceConnection}}'
             appType: 'webApp'
             appName: '${{parameters.webAppName}}'
-            package: '$(System.ArtifactsDirectory)/${{parameters.artifactName}}.zip'
+            package: '$(System.ArtifactsDirectory)/**/*${{parameters.appName}}.zip'
