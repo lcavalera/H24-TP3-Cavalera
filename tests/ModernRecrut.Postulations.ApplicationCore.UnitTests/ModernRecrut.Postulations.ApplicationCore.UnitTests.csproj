@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ModernRecrut.Postulation.ApplicationCore\ModernRecrut.Postulations.ApplicationCore.csproj" />
+    <ProjectReference Include="..\..\src\ModernRecrut.Postulations.ApplicationCore\ModernRecrut.Postulations.ApplicationCore.csproj" />
   </ItemGroup>
 
 </Project>

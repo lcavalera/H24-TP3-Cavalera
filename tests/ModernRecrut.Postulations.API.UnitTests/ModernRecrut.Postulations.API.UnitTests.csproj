@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ModernRecrut.Postulation.API\ModernRecrut.Postulations.API.csproj" />
+    <ProjectReference Include="..\..\src\ModernRecrut.Postulations.API\ModernRecrut.Postulations.API.csproj" />
   </ItemGroup>
 
 </Project>
