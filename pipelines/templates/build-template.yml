@@ -9,30 +9,33 @@ parameters:
     type: boolean
     default: false
 
+jobs:
+  - job: 'Build'
+    pool:
+      vmImage: ubuntu-latest
 
+    steps:
 
-steps:
-
-  - task: DotNetCoreCLI@2
-    condition: ${{ eq(parameters.publishWebProjects, true) }}
-    displayName: 'Publication du project ${{parameters.appname}}.API'
-    inputs:
-      command: 'publish'
-      publishWebProjects: true
-      projects: '**/*${{parameters.appname}}.csproj'
-      arguments: '--configuration ${{parameters.buildConfiguration}} --output $(Build.ArtifactStagingDirectory)'
+    - task: DotNetCoreCLI@2
+      condition: ${{ eq(parameters.publishWebProjects, true) }}
+      displayName: 'Publication du project ${{parameters.appname}}.API'
+      inputs:
+        command: 'publish'
+        publishWebProjects: true
+        projects: '**/*${{parameters.appname}}.csproj'
+        arguments: '--configuration ${{parameters.buildConfiguration}} --output $(Build.ArtifactStagingDirectory)'
     
-  - task: DotNetCoreCLI@2
-    displayName: 'Publication du project $(appname).API'
-    inputs:
-      command: 'publish'
-      publishWebProjects: false
-      projects: '**/*${{parameters.appname}}.csproj'
-      arguments: '--configuration ${{parameters.buildConfiguration}} --output $(Build.ArtifactStagingDirectory)'
+    - task: DotNetCoreCLI@2
+      displayName: 'Publication du project $(appname).API'
+      inputs:
+        command: 'publish'
+        publishWebProjects: false
+        projects: '**/*${{parameters.appname}}.csproj'
+        arguments: '--configuration ${{parameters.buildConfiguration}} --output $(Build.ArtifactStagingDirectory)'
 
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publication de artifact dans Azure Pipeline'
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: ${{parameters.artifactName}}
-      publishLocation: 'Container'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publication de artifact dans Azure Pipeline'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: ${{parameters.artifactName}}
+        publishLocation: 'Container'
