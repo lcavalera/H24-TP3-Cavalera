@@ -22,12 +22,15 @@ stages:
 - stage: 'DocumentsDeployToDev'
   displayName: 'Documents API Deploy to Dev'
   dependsOn: 'GenerationSolution'
-  jobs:
+  variables:
+    artifactName: 'artifdocuments'
+
+  jobs:  
   - job: 'BuildDocuments'
   - template: templates/build-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
-      artifactName: 'artifdocuments'
+      artifactName: $(artifactName)
       appname: 'Documents.API'
 
   - job: 'DeployDocuments'
@@ -35,19 +38,22 @@ stages:
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Dev'
-      artifactName: 'artif-documents'
+      artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
       webAppName: 'webapp-documents-*'
 
 - stage: 'EmploisDeployToDev'
   displayName: 'Emplois API Deploy to Dev'
   dependsOn: 'GenerationSolution'
+  variables:
+    artifactName: 'artifemplois'
+
   jobs:
   - job: 'BuildEmplois'
   - template: templates/build-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
-      artifactName: 'artif-emplois'
+      artifactName: $(artifactName)
       appname: 'Emplois.API'
 
   - job: 'DeployEmplois'
@@ -55,19 +61,22 @@ stages:
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Dev'
-      artifactName: 'artif-emplois'
+      artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
       webAppName: 'webapp-emplois-*'
 
 - stage: 'FavorisDeployToDev'
   displayName: 'Favoris API Deploy to Dev'
   dependsOn: 'GenerationSolution'
+  variables:
+    artifactName: 'artiffavoris'
+
   jobs:
   - job: 'BuildFavoris'
   - template: templates/build-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
-      artifactName: 'artif-favoris'
+      artifactName: $(artifactName)
       appname: 'Favoris.API'
 
   - job: 'DeployFavoris'
@@ -75,19 +84,22 @@ stages:
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Dev'
-      artifactName: 'artif-favoris'
+      artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
       webAppName: 'webapp-favoris-*'
 
 - stage: 'PostulationsDeployToDev'
   displayName: 'Postulations API Deploy to Dev'
   dependsOn: 'GenerationSolution'
+  variables:
+    artifactName: 'artifpostulations'
+
   jobs:
   - job: 'BuildPostulations'
   - template: templates/build-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
-      artifactName: 'artif-postulations'
+      artifactName: $(artifactName)
       appname: 'Postulations.API'
 
   - job: 'DeployPostulations'
@@ -95,7 +107,7 @@ stages:
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Dev'
-      artifactName: 'artif-postulations'
+      artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
       webAppName: 'webapp-postulations-*'
 
@@ -106,12 +118,15 @@ stages:
   - 'EmploisDeployToDev'
   - 'FavorisDeployToDev'
   - 'PostulationsDeployToDev'
+  variables:
+    artifactName: 'artifmvc'
+
   jobs:
   - job: 'BuildMvc'
   - template: templates/build-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
-      artifactName: 'artif-mvc'
+      artifactName: $(artifactName)
       appname: 'MVC'
       publishWebProjects: true
 
@@ -120,6 +135,6 @@ stages:
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Dev'
-      artifactName: 'artif-mvc'
+      artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
       webAppName: 'webapp-mvc-*'
