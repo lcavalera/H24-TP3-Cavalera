@@ -20,7 +20,7 @@ stages:
 
 - stage: 'DocumentsDeployToDev'
   displayName: 'Documents API Deploy to Dev'
-  dependsOn: 'Build'
+  dependsOn: 'Generation'
   variables:
     artifactName: 'artifdocuments'
 
@@ -43,7 +43,7 @@ stages:
 
 - stage: 'EmploisDeployToDev'
   displayName: 'Emplois API Deploy to Dev'
-  dependsOn: 'Build'
+  dependsOn: 'Generation'
   variables:
     artifactName: 'artifemplois'
 
@@ -66,7 +66,7 @@ stages:
 
 - stage: 'FavorisDeployToDev'
   displayName: 'Favoris API Deploy to Dev'
-  dependsOn: 'Build'
+  dependsOn: 'Generation'
   variables:
     artifactName: 'artiffavoris'
 
@@ -89,7 +89,7 @@ stages:
 
 - stage: 'PostulationsDeployToDev'
   displayName: 'Postulations API Deploy to Dev'
-  dependsOn: 'Build'
+  dependsOn: 'Generation'
   variables:
     artifactName: 'artifpostulations'
 
