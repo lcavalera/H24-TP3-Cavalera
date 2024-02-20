@@ -17,12 +17,12 @@ jobs:
     steps:
 
     - task: DotNetCoreCLI@2
-      condition: eq(parameters.publishWebProjects, true)
-      displayName: 'Publication du project $(appname).API'
+      condition: ${{ eq(parameters.publishWebProjects, true) }}
+      displayName: 'Publication du project ${{parameters.appname}}.API'
       inputs:
         command: 'publish'
         publishWebProjects: true
-        projects: '**/*$(appname).csproj'
+        projects: '**/*${{parameters.appname}}.csproj'
         arguments: '--configuration ${{parameters.buildConfiguration}} --output $(Build.ArtifactStagingDirectory)'
     
     - task: DotNetCoreCLI@2
@@ -30,7 +30,7 @@ jobs:
       inputs:
         command: 'publish'
         publishWebProjects: false
-        projects: '**/*$(appname).csproj'
+        projects: '**/*${{parameters.appname}}.csproj'
         arguments: '--configuration ${{parameters.buildConfiguration}} --output $(Build.ArtifactStagingDirectory)'
 
     - task: PublishBuildArtifacts@1

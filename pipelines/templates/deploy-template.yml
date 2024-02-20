@@ -7,9 +7,11 @@ parameters:
     type: string
   - name: webAppName
     type: string
+  - name: appName
+    type: string
 
 jobs:
-  - deployment: 'WebDeploy'
+  - deployment: 'Deploy'
     pool:
       vmImage: ubuntu-latest
     environment: '${{parameters.environment}}'
@@ -31,4 +33,4 @@ jobs:
             azureSubscription: '${{parameters.serviceConnection}}'
             appType: 'webApp'
             appName: '${{parameters.webAppName}}'
-            package: '$(System.ArtifactsDirectory)/**/*.zip'
+            package: '$(System.ArtifactsDirectory)/**/*${{parameters.appName}}.zip'
