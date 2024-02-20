@@ -26,17 +26,15 @@ stages:
     appname: 'Documents.API'
 
   jobs:
-  - job: 'BuildDocuments'
   - template: templates/build-template.yml
     parameters:
       buildConfiguration: $(buildConfiguration)
       artifactName: $(artifactName)
       appname: $(appname)
 
-  - job: 'DeployDocuments'
-    dependsOn: 'BuildDocuments'
   - template: templates/deploy-template.yml
     parameters:
+      DependsOn: 'Build'
       environment: 'Dev'
       artifactName: $(artifactName)
       serviceConnection: $(serviceConnection)
