@@ -157,8 +157,6 @@ stages:
     appname: 'Documents.API'
 
   jobs:
-  - job: 'DeployDocuments'
-    dependsOn: 'BuildDocuments'
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Prod'
@@ -180,8 +178,6 @@ stages:
     appname: 'Emplois.API'
 
   jobs:
-  - job: 'DeployEmplois'
-    dependsOn: 'BuildEmplois'
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Prod'
@@ -203,8 +199,6 @@ stages:
     appname: 'Favoris.API'
 
   jobs:
-  - job: 'DeployFavoris'
-    dependsOn: 'BuildFavoris'
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Prod'
@@ -226,8 +220,6 @@ stages:
     appname: 'Postulations.API'
 
   jobs:
-  - job: 'DeployPostulations'
-    dependsOn: 'BuildPostulations'
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Prod'
@@ -248,8 +240,6 @@ stages:
     appname: 'MVC'
 
   jobs:
-  - job: 'DeployMvc'
-    dependsOn: 'BuildMvc'
   - template: templates/deploy-template.yml
     parameters:
       environment: 'Prod'
