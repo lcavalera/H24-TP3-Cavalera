@@ -14,6 +14,7 @@ parameters:
 
 jobs:
   - job:
+    displayName: '${{parameters.appname}} Build'
     dependsOn: ${{parameters.DependsOn}}
     pool:
       vmImage: ubuntu-latest
