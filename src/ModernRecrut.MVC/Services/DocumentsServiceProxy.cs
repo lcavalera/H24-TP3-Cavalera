@@ -8,7 +8,7 @@ namespace ModernRecrut.MVC.Services
     public class DocumentsServiceProxy : IDocumentsService
     {
         private readonly HttpClient _httpClient;
-        private const string _documentsApiUrl = "api/Documents/";
+        private const string _documentsApiUrl = "http://localhost:7198/api/ajoutdocuments";
         private readonly List<Fichier> _fichiers;
         private readonly IConfiguration _configuration;
         private readonly ILogger<DocumentsServiceProxy> _logger;

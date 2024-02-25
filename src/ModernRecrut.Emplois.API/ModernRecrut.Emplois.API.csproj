@@ -10,6 +10,14 @@
 	  <UserSecretsId>cd849a19-6644-4a64-996c-d87bd532b2a1</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Azure.Bicep.CommandLine.win-x64" Version="0.24.24" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.24" />
