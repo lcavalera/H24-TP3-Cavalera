@@ -1,0 +1,47 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+variables:
+  serviceConnection: 'sc-azure'
+  appName: 'webapp-emplois-tcalemx7mxa56'
+  containerRegistry: 'acrmodernrecruit.azurecr.io'
+  acrServiceConnection: 'sc-container-registry'
+  imageRepository: 'emplisapi'
+  dockerfilePath: '**/Dockerfile'
+  tag: '$(Build.BuildId)'
+
+stages:
+  - stage: 'Build'
+    displayName: 'Génération et push image'
+    pool:
+      vmImage: ubuntu-latest
+    jobs:
+      - job: 'Build'
+        steps:
+        - task: Docker@2
+          displayName: 'Génération et push image dans registre de conteneurs'
+          inputs:
+            containerRegistry: '$(acrServiceConnection)'
+            repository: '$(imageRepository)'
+            command: 'buildAndPush'
+            Dockerfile: '$(dockerfilePath)'
+            buildContext: '$(Build.SourcesDirectory)'
+
+  - stage: 'DeployToProd'
+    displayName: 'Déploiment en Prod'
+    pool:
+      vmImage: ubuntu-latest
+    dependsOn: 'Build'
+    jobs:
+      - deployment: 'DeployToProd'
+        environment: Prod
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - 
