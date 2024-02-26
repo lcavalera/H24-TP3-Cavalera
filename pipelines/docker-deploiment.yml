@@ -26,20 +26,20 @@ stages:
         - task: Docker@2
           displayName: 'Génération et push image dans registre de conteneurs'
           inputs:
-            containerRegistry: '$(acrServiceConnection)'
-            repository: '$(imageRepository)'
+            containerRegistry: $(acrServiceConnection)
+            repository: $(imageRepository)
             command: 'buildAndPush'
-            Dockerfile: '$(dockerfilePath)'
-            buildContext: '$(Build.SourcesDirectory)'
+            Dockerfile: $(dockerfilePath)
+            buildContext: $(Build.SourcesDirectory)
 
-  - stage: 'DeployToProd'
-    displayName: 'Déploiment en Prod'
+  - stage: 'DeployToDev'
+    displayName: 'Déploiment en Dev'
     pool:
       vmImage: ubuntu-latest
     dependsOn: 'Build'
     jobs:
-      - deployment: 'DeployToProd'
-        environment: Prod
+      - deployment: 'DeployToDev'
+        environment: Dev
         strategy:
           runOnce:
             deploy:
@@ -47,7 +47,8 @@ stages:
               - task: AzureCLI@2
                 displayName: 'Déploiment sur Azure Container Instances'
                 inputs:
-                  azureSubscription: 'sc-azure'
-                  scriptType: 'batch'
+                  azureSubscription: $(serviceConnection)
+                  scriptType: 'bash'
                   scriptLocation: 'inlineScript'
-                  inlineScript: 'az container create --resource-group rg-prod-modernrecruit --name $(imageRepository) --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username acrmodernrecruit --registry-password dSYGgX1D8rdX0xUegK9+ohT/EJouIwXrdGdH/NaA1X+ACRDypbXA --ip-address Public --dns-name-label dnsemploisapi --ports 5555'
+                  inlineScript: 
+                    az container create --resource-group rg-prod-modernrecruit --name $(imageRepository) --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username acrmodernrecruit --registry-password dSYGgX1D8rdX0xUegK9+ohT/EJouIwXrdGdH/NaA1X+ACRDypbXA --ip-address Public --dns-name-label dnsemploisapi --ports 80
