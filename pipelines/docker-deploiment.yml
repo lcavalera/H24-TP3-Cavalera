@@ -1,0 +1,54 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+variables:
+  serviceConnection: 'sc-azure'
+  appName: 'webapp-emplois-tcalemx7mxa56'
+  containerRegistry: 'acrmodernrecruit.azurecr.io'
+  acrServiceConnection: 'sc-container-registry'
+  imageRepository: 'emplisapi'
+  dockerfilePath: '**/Dockerfile'
+  tag: '$(Build.BuildId)'
+
+stages:
+  - stage: 'Build'
+    displayName: 'Génération et push image'
+    pool:
+      vmImage: ubuntu-latest
+    jobs:
+      - job: 'Build'
+        steps:
+        - task: Docker@2
+          displayName: 'Génération et push image dans registre de conteneurs'
+          inputs:
+            containerRegistry: $(acrServiceConnection)
+            repository: $(imageRepository)
+            command: 'buildAndPush'
+            Dockerfile: $(dockerfilePath)
+            buildContext: $(Build.SourcesDirectory)
+
+  - stage: 'DeployToDev'
+    displayName: 'Déploiment en Dev'
+    pool:
+      vmImage: ubuntu-latest
+    dependsOn: 'Build'
+    jobs:
+      - deployment: 'DeployToDev'
+        environment: Dev
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - task: AzureCLI@2
+                displayName: 'Déploiment sur Azure Container Instances'
+                inputs:
+                  azureSubscription: $(serviceConnection)
+                  scriptType: 'bash'
+                  scriptLocation: 'inlineScript'
+                  inlineScript: 
+                    az container create --resource-group rg-prod-modernrecruit --name $(imageRepository) --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username acrmodernrecruit --registry-password dSYGgX1D8rdX0xUegK9+ohT/EJouIwXrdGdH/NaA1X+ACRDypbXA --ip-address Public --dns-name-label dnsemploisapi --ports 80
