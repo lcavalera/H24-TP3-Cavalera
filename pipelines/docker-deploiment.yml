@@ -9,8 +9,8 @@ trigger:
 variables:
   serviceConnection: 'sc-azure'
   appName: 'webapp-emplois-tcalemx7mxa56'
-  containerRegistry: 'acrmodernrecruit.azurecr.io'
-  acrServiceConnection: 'sc-container-registry'
+  containerRegistry: 'acrmodernrecruit2.azurecr.io'
+  acrServiceConnection: 'sc-container-registry2'
   imageRepository: 'emploisapi'
   aciName: 'aci-emplois-api'
   dockerfilePath: '**/Dockerfile'
