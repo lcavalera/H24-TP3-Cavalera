@@ -13,7 +13,7 @@ variables:
   acrServiceConnection: 'sc-container-registry2'
   imageRepository: 'emploisapi'
   aciName: 'aci-emplois-api'
-  dockerfilePath: '**/Dockerfile'
+  dockerfilePath: '**/ModernRecrut.MVC/Dockerfile'
   tag: '$(Build.BuildId)'
 
 stages:
