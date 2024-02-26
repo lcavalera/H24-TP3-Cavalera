@@ -44,4 +44,10 @@ stages:
           runOnce:
             deploy:
               steps:
-                - 
+              - task: AzureCLI@2
+                displayName: 'Déploiment sur Azure Container Instances'
+                inputs:
+                  azureSubscription: 'sc-azure'
+                  scriptType: 'batch'
+                  scriptLocation: 'inlineScript'
+                  inlineScript: 'az container create --resource-group rg-prod-modernrecruit --name $(imageRepository) --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username acrmodernrecruit --registry-password dSYGgX1D8rdX0xUegK9+ohT/EJouIwXrdGdH/NaA1X+ACRDypbXA --ip-address Public --dns-name-label dnsemploisapi --ports 80'
