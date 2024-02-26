@@ -8,10 +8,11 @@ trigger:
 
 variables:
   serviceConnection: 'sc-azure'
-  appName: 'webapp-emplois-tcalemx7mxa56'
-  containerRegistry: 'acrmodernrecruit.azurecr.io'
-  acrServiceConnection: 'sc-container-registry'
-  imageRepository: 'emplisapi'
+  appName: 'webapp-emplois'
+  containerRegistry: 'acrmodernrecruit2.azurecr.io'
+  acrServiceConnection: 'sc-container-registry2'
+  imageRepository: 'emploisapi'
+  aciName: 'aci-emplois-api'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
 
@@ -26,11 +27,11 @@ stages:
         - task: Docker@2
           displayName: 'Génération et push image dans registre de conteneurs'
           inputs:
-            containerRegistry: $(acrServiceConnection)
-            repository: $(imageRepository)
+            containerRegistry: '$(acrServiceConnection)'
+            repository: '$(imageRepository)'
             command: 'buildAndPush'
-            Dockerfile: $(dockerfilePath)
-            buildContext: $(Build.SourcesDirectory)
+            Dockerfile: '$(dockerfilePath)'
+            buildContext: '$(Build.SourcesDirectory)'
 
   - stage: 'DeployToDev'
     displayName: 'Déploiment en Dev'
@@ -51,4 +52,4 @@ stages:
                   scriptType: 'bash'
                   scriptLocation: 'inlineScript'
                   inlineScript: 
-                    az container create --resource-group rg-prod-modernrecruit --name $(imageRepository) --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username acrmodernrecruit --registry-password dSYGgX1D8rdX0xUegK9+ohT/EJouIwXrdGdH/NaA1X+ACRDypbXA --ip-address Public --dns-name-label dnsemploisapi --ports 80
+                    az container create --resource-group rg-dev-modernrecruit --name $(aciName) --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username acrmodernrecruit2 --registry-password Fs3pE8/YJdOCjy6XpHh1grr2fjLyb9E5ikwYvBdjsS+ACRAnIIjo --ip-address Public --dns-name-label emploisapi --ports 5555
