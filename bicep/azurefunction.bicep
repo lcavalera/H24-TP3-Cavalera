@@ -12,7 +12,7 @@ resource storage 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   name: 'st${appName}${uniqueString(resourceGroup().id)}'
   location: location
   sku:{
-    name: 'Standard_LRS'
+    name: 'Standard_ZRS'
   }
   kind: 'StorageV2'
 }
@@ -62,14 +62,3 @@ resource appFunction 'Microsoft.Web/sites@2023-01-01' = {
     }
   }
 }
-
-// resource appFunction 'Microsoft.Web/sites/functions@2023-01-01' = {
-//   name: 'func-${appName}${uniqueString(resourceGroup().id)}'
-//   parent: appService
-//   properties: {
-//     config:{
-//       name: 'FUNCTIONS_WORKER_RUNTIME'
-//       value: runtime
-//     }
-//   }
-// }
