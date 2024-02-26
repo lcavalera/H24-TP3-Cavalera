@@ -12,6 +12,7 @@ variables:
   containerRegistry: 'acrmodernrecruit.azurecr.io'
   acrServiceConnection: 'sc-container-registry'
   imageRepository: 'emplisapi'
+  aciName: 'aci-emplois-api'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
 
@@ -32,14 +33,14 @@ stages:
             Dockerfile: $(dockerfilePath)
             buildContext: $(Build.SourcesDirectory)
 
-  - stage: 'DeployToDev'
-    displayName: 'Déploiment en Dev'
+  - stage: 'DeployToProd'
+    displayName: 'Déploiment en Prod'
     pool:
       vmImage: ubuntu-latest
     dependsOn: 'Build'
     jobs:
-      - deployment: 'DeployToDev'
-        environment: Dev
+      - deployment: 'DeployToProd'
+        environment: Prod
         strategy:
           runOnce:
             deploy:
@@ -51,4 +52,4 @@ stages:
                   scriptType: 'bash'
                   scriptLocation: 'inlineScript'
                   inlineScript: 
-                    az container create --resource-group rg-prod-modernrecruit --name $(imageRepository) --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username acrmodernrecruit --registry-password dSYGgX1D8rdX0xUegK9+ohT/EJouIwXrdGdH/NaA1X+ACRDypbXA --ip-address Public --dns-name-label dnsemploisapi --ports 80
+                    az container create --resource-group rg-prod-modernrecruit --name $(aciName) --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username acrmodernrecruit --registry-password dSYGgX1D8rdX0xUegK9+ohT/EJouIwXrdGdH/NaA1X+ACRDypbXA --ip-address Public --dns-name-label dnsemploisapi --ports 5555
