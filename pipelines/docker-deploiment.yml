@@ -33,14 +33,14 @@ stages:
             Dockerfile: $(dockerfilePath)
             buildContext: $(Build.SourcesDirectory)
 
-  - stage: 'DeployToProd'
-    displayName: 'Déploiment en Prod'
+  - stage: 'DeployToDev'
+    displayName: 'Déploiment en Dev'
     pool:
       vmImage: ubuntu-latest
     dependsOn: 'Build'
     jobs:
-      - deployment: 'DeployToProd'
-        environment: Prod
+      - deployment: 'DeployToDev'
+        environment: Dev
         strategy:
           runOnce:
             deploy:
