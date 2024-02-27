@@ -13,7 +13,7 @@ variables:
   acrServiceConnection: 'sc-container-registry2'
   imageRepository: 'emploisapi'
   aciName: 'aci-emplois-api'
-  dockerfilePath: '**/ModernRecrut.MVC/Dockerfile'
+  dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
 
 stages:
@@ -31,7 +31,7 @@ stages:
             repository: '$(imageRepository)'
             command: 'buildAndPush'
             Dockerfile: '$(dockerfilePath)'
-            buildContext: '$(Build.SourcesDirectory)'
+            buildContext: '$(Build.Repository.LocalPath)'
 
   - stage: 'DeployToDev'
     displayName: 'Déploiment en Dev'
@@ -52,4 +52,4 @@ stages:
                   scriptType: 'bash'
                   scriptLocation: 'inlineScript'
                   inlineScript: 
-                    az container create --resource-group rg-dev-modernrecruit --name $(aciName) --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username acrmodernrecruit2 --registry-password Fs3pE8/YJdOCjy6XpHh1grr2fjLyb9E5ikwYvBdjsS+ACRAnIIjo --ip-address Public --dns-name-label emploisapi --ports 5555
+                    az container create --resource-group rg-dev-modernrecruit --name $(aciName) --environment-variables ASPNETCORE_ENVIRONMENT=development --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username acrmodernrecruit2 --registry-password Fs3pE8/YJdOCjy6XpHh1grr2fjLyb9E5ikwYvBdjsS+ACRAnIIjo --ip-address Public --dns-name-label emploisapi --ports 80
