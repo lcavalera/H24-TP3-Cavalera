@@ -8,12 +8,8 @@ trigger:
 
 variables:
   serviceConnection: 'sc-azure'
-  appName: 'webapp-emplois'
-  containerRegistry: 'acrmodernrecruit2.azurecr.io'
-  acrServiceConnection: 'sc-container-registry2'
-  imageRepository: 'emploisapi'
-  aciName: 'aci-emplois-api'
-  dockerfilePath: '**/Dockerfile'
+  acrServiceConnection: 'sc-container-registry'
+  imageRepository: 'emploisapi' 
   tag: '$(Build.BuildId)'
 
 stages:
@@ -21,6 +17,9 @@ stages:
     displayName: 'Génération et push image'
     pool:
       vmImage: ubuntu-latest
+    variables:
+      dockerfilePath: '**/*Emplois.API/Dockerfile'
+
     jobs:
       - job: 'Build'
         steps:
@@ -35,9 +34,16 @@ stages:
 
   - stage: 'DeployToDev'
     displayName: 'Déploiment en Dev'
+    dependsOn: 'Build'
     pool:
       vmImage: ubuntu-latest
-    dependsOn: 'Build'
+    variables:
+      containerRegistry: 'acrmodernrecruit.azurecr.io'
+      registryUser: 'acrmodernrecruit'
+      registryPwd: 'QzwiOG1rnGtNXXaQntesSuNbHkXpn7GuOkB6qm4PEg+ACRAFX/X4'
+      aciName: 'aci-emplois-api'
+      env: 'development'
+
     jobs:
       - deployment: 'DeployToDev'
         environment: Dev
@@ -52,4 +58,4 @@ stages:
                   scriptType: 'bash'
                   scriptLocation: 'inlineScript'
                   inlineScript: 
-                    az container create --resource-group rg-dev-modernrecruit --name $(aciName) --environment-variables ASPNETCORE_ENVIRONMENT=development --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username acrmodernrecruit2 --registry-password Fs3pE8/YJdOCjy6XpHh1grr2fjLyb9E5ikwYvBdjsS+ACRAnIIjo --ip-address Public --dns-name-label emploisapi --ports 80
+                    az container create --resource-group rg-dev-modernrecruit --name $(aciName) --environment-variables ASPNETCORE_ENVIRONMENT=$(env) --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username $(registryUser) --registry-password $(registryPwd) --ip-address Public --dns-name-label $(imageRepository) --ports 5555
