@@ -30,7 +30,7 @@ stages:
             repository: '$(imageRepository)'
             command: 'buildAndPush'
             Dockerfile: '$(dockerfilePath)'
-            buildContext: '$(Build.Repository.LocalPath)'
+            buildContext: '$(Build.SourcesDirectory)'
 
   - stage: 'DeployToDev'
     displayName: 'Déploiment en Dev'
