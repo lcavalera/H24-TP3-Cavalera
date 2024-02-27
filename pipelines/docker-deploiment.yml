@@ -58,4 +58,4 @@ stages:
                   scriptType: 'bash'
                   scriptLocation: 'inlineScript'
                   inlineScript: 
-                    az container create --resource-group rg-dev-modernrecruit --name $(aciName) --environment-variables ASPNETCORE_ENVIRONMENT=$(env) --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username $(registryUser) --registry-password $(registryPwd) --ip-address Public --dns-name-label $(imageRepository) --ports 5555
+                    az container create --resource-group rg-dev-modernrecruit --name $(aciName) --environment-variables ASPNETCORE_ENVIRONMENT=$(env) --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username $(registryUser) --registry-password $(registryPwd) --ip-address Public --dns-name-label $(imageRepository) --ports 80
