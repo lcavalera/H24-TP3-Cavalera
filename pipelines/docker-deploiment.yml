@@ -52,11 +52,4 @@ stages:
                   scriptType: 'bash'
                   scriptLocation: 'inlineScript'
                   inlineScript: 
-                    az container create --resource-group rg-dev-modernrecruit --name $(aciName) --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username acrmodernrecruit2 --registry-password Fs3pE8/YJdOCjy6XpHh1grr2fjLyb9E5ikwYvBdjsS+ACRAnIIjo --ip-address Public --dns-name-label emploisapi --ports 5555
-
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'sc-azure'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az container create --resource-group rg-dev-modernrecruit --name $(aciName) --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username acrmodernrecruit2 --registry-password Fs3pE8/YJdOCjy6XpHh1grr2fjLyb9E5ikwYvBdjsS+ACRAnIIjo --ip-address Public --dns-name-label emploisapi --ports 80'
+                    az container create --resource-group rg-dev-modernrecruit --name $(aciName) --image $(containerRegistry)/$(imageRepository):$(tag) --cpu 1 --memory 1 --registry-login-server $(containerRegistry) --registry-username acrmodernrecruit2 --registry-password Fs3pE8/YJdOCjy6XpHh1grr2fjLyb9E5ikwYvBdjsS+ACRAnIIjo --ip-address Public --dns-name-label emploisapi --ports 80
