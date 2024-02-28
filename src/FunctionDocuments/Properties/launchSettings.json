@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "FunctionDocuments": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7198",
+      "launchBrowser": false
+    }
+  }
+}
